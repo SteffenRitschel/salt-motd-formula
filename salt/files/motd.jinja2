@@ -1,0 +1,38 @@
+{%- if grains['fqdn'].endswith('proxy') %}
+  {%- set squid = salt.pkg.version('squid') %}
+{%- elif grains['fqdn'].endswith('jenkins') %}
+  {%- set jenkins = salt.pkg.version('jenkins') %}
+{%- elif grains['fqdn'].endswith('balance01') or grains['fqdn'].endswith('balance02') %}
+  {%- set haproxy = salt.pkg.version('haproxy') %}
+  {%- set keepalived = salt.pkg.version('keepalived') %}
+{%- elif grains['fqdn'].endswith('log01') or grains['fqdn'].endswith('log02') %}
+  {%- set elasticsearch = salt.pkg.version('elasticsearch') %}
+  {%- set mongodb = salt.pkg.version('mongodb-org') %}
+  {%- set graylog = salt.pkg.version('graylog-server') %}
+{% endif %}
+-----------------------------------------------------------------------------
+Welcome to {{ grains['fqdn'] }}
+
+IP:            {{ grains['ipv4'][0] }}{% if grains['ipv4'][1] is defined and grains['ipv4'][1] != '127.0.0.1'%} & {{ grains['ipv4'][1] }} {% endif %}
+OS:            {{ grains['osfullname'] }} {{ grains['osrelease'] }} "{{ grains['oscodename']|capitalize }}"
+Kernel:        {{ grains['kernelrelease'] }}
+Memory:        {{ grains['mem_total'] }} MB
+CPU:           {{ grains['num_cpus'] }} x {{ grains['cpu_model'] }}
+Salt Version:  {{ grains['saltversion'] }}
+Salt Role:     {%- if pillar['role'] is defined %}     {{ pillar['role']|capitalize }} {% else %}     NONE {% endif %}
+{%- if grains['fqdn'].endswith('proxy') %}
+Software Info: Squid "{{ squid }}"
+{%- elif grains['fqdn'].endswith('jenkins') %}
+Software Info: Jenkins "{{ jenkins }}"
+{%- elif grains['fqdn'].endswith('balance01') or grains['fqdn'].endswith('balance02') %}
+Software Info: HAProxy "{{ haproxy }}" | KeepaliveD: "{{ keepalived }}"
+{%- elif grains['fqdn'].endswith('log01') or grains['fqdn'].endswith('log02') %}
+Software Info: Elasticsearch "{{ elasticsearch }}" | MongoDB: "{{ mongodb }}" | GrayLog: "{{ graylog }}"
+{% endif %}
+
+Access to this device is limited to authorized staff.
+
+This server is managed using a configuration management system (saltstack.org).
+Changes made to this box directly will likely be overwritten by Salt. Instead
+modify server configuration via the configuration management git repository.
+------------------------------------------------------------------------------
