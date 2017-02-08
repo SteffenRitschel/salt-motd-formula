@@ -23,11 +23,12 @@ Mapping Variables for diffrent os_familys.
 
 ``Preview``
 =================
-Every option available can be set vie the Jinja Template.
+Every option available can be set via the Jinja Template.
 
 ::
-     
+
      Welcome to vm-log01
+
      IP:            10.0.0.1
      OS:            Debian 8.7 "Jessie"
      Kernel:        3.16.0-4-amd64
